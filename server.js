@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.json({ limit: '40mb' }));
 app.use(bodyParser.urlencoded({ limit: '40mb', extended: true }));  
 
+app.use('/images', express.static('images'));
 // la porta del server
 const port = 50000;
 
@@ -98,14 +99,14 @@ let order = {
     lagerplatz: "C31",
     programm: "Explorer.exe",
     status: "In Arbeit",
-    progress: 0,
+    progress: 20,
     total: 100,
     gefertigt: 1,
     aussschuss: 0,
     text_left: "KLEMMBOLZEN Y-LENKER",
     text_right: "DREHGESTELL",
-    image: "",
-    phase: ""
+    image: "image.jpg",
+    phase: "no phase yet"
   };
 
 app.get('/:mc/orders', (req, res) => {
@@ -120,19 +121,8 @@ app.get('/order/:mc/:id', async  (req, res) => {
 
   let mc = req.params.mc;
   let id = req.params.id;
-  
-  await fs.readFile('./image.jpg', (err, data) => {
-    
 
-      if(err) {
-        console.error(err)
-        return {}
-      }else {
-        let imageBase64 = Buffer.from(data).toString('base64');
-        order.image = imageBase64;
-        res.json(order);
-      }
-  })
+  res.json(order);
 })
 
 app.get('/machines', (req, res) => {
@@ -146,12 +136,19 @@ app.put("/order/:mc/:id/update", (req, res) => {
   let id = req.params.id;
 
   const data = req.body;
-  console.log(req.body);
-
-  order.progress = data.progress;
-  order.status = data.status; 
-
+  let tmpTotal = order.progress + data.added;
+  if((tmpTotal) > order.total) {
+    res.status(200).json({
+      status: 'error cannot add more than total',
+    })
+  }else {
+    order.progress = order.progress + data.added;
+    res.status(200).json({
+      status: 'ok'
+    })
+  }
 })
+
 
 app.put("/order/:mc/:id/phase", (req, res) => {
 
@@ -161,6 +158,8 @@ app.put("/order/:mc/:id/phase", (req, res) => {
   const data = req.body;
 
   order.phase = data.phase;
+
+  res.status(200).json({status: 'ok'})
 })
 
 
