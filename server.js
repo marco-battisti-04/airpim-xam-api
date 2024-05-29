@@ -17,6 +17,49 @@ app.use('/images', express.static('images'));
 // la porta del server
 const port = 50000;
 
+const listaUtenti = [
+  {
+    id: 1,
+    username: 'User 1'
+  },
+  {
+    id: 2,
+    username: 'User 2'
+  },
+  {
+    id: 3,
+    username: 'User 3'
+  },
+  {
+    id: 4,
+    username: 'User 4'
+  },
+  {
+    id: 5,
+    username: 'User 5'
+  },
+  {
+    id: 6,
+    username: 'User 6'
+  },
+  {
+    id: 7,
+    username: 'User 7'
+  },
+  {
+    id: 8,
+    username: 'User 8'
+  },
+  {
+    id: 9,
+    username: 'User 9'
+  },
+  {
+    id: 10,
+    username: 'User 10'
+  }
+]
+
 // esempio di un possibile json
 const listaOrdini = [
   {
@@ -43,8 +86,32 @@ const listaOrdini = [
     id: 5,
     name: 'Ordine 5',
     desc: 'short description of the Order'
+  },
+  {
+    id: 6,
+    name: 'Ordine 6',
+    desc: 'short description of the Order'
+  },
+  {
+    id: 7,
+    name: 'Ordine 7',
+    desc: 'short description of the Order'
+  },
+  {
+    id: 8,
+    name: 'Ordine 8',
+    desc: 'short description of the Order'
+  },
+  {
+    id: 9,
+    name: 'Ordine 9',
+    desc: 'short description of the Order'
+  },
+  {
+    id: 10,
+    name: 'Ordine 10',
+    desc: 'short description of the Order'
   }
-  
 ]
 const listaMacchine = [
   {
@@ -92,8 +159,8 @@ const listaMacchine = [
 ]
 
 let order = {
-    mc: 0,
-    id: 0,
+    mc: 10,
+    id: 10,
     ag: 1000,
     bez_ag: "DRE FRA",
     lagerplatz: "C31",
@@ -162,6 +229,29 @@ app.put("/order/:mc/:id/phase", (req, res) => {
   res.status(200).json({status: 'ok'})
 })
 
+app.get('/users', (req, res) => {
+  res.send(listaUtenti);
+});
+
+app.post('/login', (req, res) => {
+  // NON RICEVE I DATI DA POST
+  const { username, pin } = req.body;
+  console.log(username, pin)
+  // console.log(data)
+  res.status(200).json({status: 'ok'});
+  // if(username && pin) {
+  //   if(pin === '1234') {
+  //     console.log("correct")
+  //     res.status(200).json({status: 'ok'});
+  //   }else {
+
+  //     console.log("wrong")
+  //     res.status(200).json({status: 'Wrong credentials'});
+  //   }
+  // }
+  
+  // res.status(200).json({status: 'ok'});
+});
 
 app.listen(port, () => {
   console.log(`Server in ascolto sulla porta ${port}`);
